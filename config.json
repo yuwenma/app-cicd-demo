@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "2.0.0",
+  "fileExistenceTests": [
+    {
+      "name": "bootstrap",
+      "path": "/yuwen.txt",
+      "shouldExist": true,
+      "uid": -1,
+      "gid": -1
+    }
+  ]
+}

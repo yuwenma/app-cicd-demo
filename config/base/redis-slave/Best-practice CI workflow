@@ -1,0 +1,78 @@
+Best-practice CI workflow
+
+Build IMG_1 → Tag IMG_1 → Publish IMG_1 →  
+Build IMG_2 → Tag IMG_2 → Publish IMG_2 →
+Test IMG1 → Test IMG2
+
+
+Platform Admin
+
+	kpt pkg get \
+	https://source.developers.google.com/p/anthos-cli-alpha/r/onboarding-blueprints.git/blueprint-ci/ci ci
+
+	kpt cfg list-setters ./ci   # Configurable setters
+	kpt cfg set ./ci namespace cicd 
+	kpt cfg set ./ci gcr_img_1 gcr.io/yuwen-cicd-demo2/ci-redisslave
+	kpt cfg set ./ci gcr_img_2 gcr.io/yuwen-cicd-demo2/ci-frontend
+	kpt cfg set ./ci src_repo  https://github.com/yuwenma/app-cicd-demo
+	kpt cfg set ./ci gsa-key-file kaniko-secret
+	kpt cfg list-setters ./ci    # Setters are updated
+
+	git push the change
+
+App Developer
+ 	Code chang
+ 	git push the change
+
+CHECK 2 NEW IMAGES
+
+Best-Practice CD workflow 
+
+Prepare and hydrate the STAGING application configuration → 
+Deploy the STAGING config to STAGING cluster → 
+Run STAGING e2e test on the cluster→ 
+Hydrate PRODUCTION from STAGING config (promote mode) → 
+Create a PRODUCTION Pull-Request → 
+Admin merges the PR and manually pushes to prod.
+
+Platform Admin
+
+	kpt pkg get \
+	https://source.developers.google.com/p/anthos-cli-alpha/r/onboarding-blueprints.git/blueprint-cd/cd .
+
+	kpt cfg list-setters ./ci   # Configurable setters
+	kpt cfg set ./cd app-name  ${APPLICATION_NAME}
+	kpt cfg set ./cd config-repo ${CONFIG_REPO}
+	kpt cfg set ./cd global-appctl-secret ${APPCTL_SECRET}
+	kpt cfg set ./cd ksa ${KSA_NAME}
+	kpt cfg set ./cd namespace ${NAMESPACE} 
+	kpt cfg list-setters ./ci    # Setters are updated
+
+	git push the change
+
+App Admin
+ 	git tag
+
+
+CHECK STG DEPLOYED
+PROD PR
+
+App Admin
+ 	Manual push
+
+
+
+
+
+
+
+
+CLUSTER=mmgt-cicd 
+NAMESPACE=cicd
+SA_NAME=cicd-gsa
+KSA_NAME=cicd-ksa
+
+
+
+
+
